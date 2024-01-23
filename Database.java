@@ -28,6 +28,7 @@ public class JDBCBasicExample {
             System.out.println("User inserted successfully!");
 
             String selectRecord = "SELECT * FROM users where username= "+"john";
+             String selectRecord2 = "SELECT * FROM users where password= "+"password123";
 
             // Display operation
             String displayQuery = "SELECT * FROM users";
