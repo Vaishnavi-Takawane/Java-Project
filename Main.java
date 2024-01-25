@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 class Food implements Serializable
@@ -17,25 +16,15 @@ class Food implements Serializable
     {
         this.itemno=itemno;
         this.quantity=quantity;
-        switch(itemno)
-        {
-            case 1:price=quantity*50;
-                break;
-            case 2:price=quantity*60;
-                break;
-            case 3:price=quantity*70;
-                break;
-            case 4:price=quantity*30;
-                break;
-        }
+        this.price = quantity * 50;
     }
 }
 class Singleroom implements Serializable
 {
-    String name;
-    String contact;
-    String gender;   
-   
+    public String name;
+    public String contact;
+    public String gender;   
+    public ArrayList<Food> food =new ArrayList<>();
     Singleroom()
     {
         this.name="";
@@ -55,8 +44,8 @@ class Doubleroom extends Singleroom implements Serializable
     
     Doubleroom()
     {
-        this.name="";
-        this.name2="";
+        name="";
+        name2="";
     }
     Doubleroom(String name,String contact,String gender,String name2,String contact2,String gender2)
     {
@@ -88,7 +77,7 @@ class holder implements Serializable
 class Hotel
 {
     static holder hotel_ob=new holder();
-    static Scanner sc = new Scanner(System.in);
+    public static Scanner sc = new Scanner(System.in);       
     static void CustDetails(int i,int rn)
     {
         String name, contact, gender;
@@ -122,6 +111,14 @@ class Hotel
             default:System.out.println("Wrong option");
                 break;
         }
+        static void complexUnoptimizedLoop() {
+        int n = 10000;
+        ArrayList<Integer> numbers = new ArrayList<>();
+
+        // Adding numbers from 1 to n to the list
+        for (int i = 1; i <= n; i++) {
+            numbers.add(i);
+
     }
     
     static void bookroom(int i)
@@ -263,8 +260,10 @@ class Hotel
             case 3:
                 for(j=0;j<hotel_ob.luxury_singleerrom.length;j++)
                 {
+                    for(int k=0;k=j;k++){
                     if(hotel_ob.luxury_singleerrom[j]==null)
                         count++;
+                    }
                 }
                 break;
             case 4:
@@ -410,7 +409,6 @@ class Hotel
                     System.out.println("Deallocated succesfully");
                 }
                 
-                break;
             case 4:
                 if(hotel_ob.deluxe_singleerrom[rn]!=null)
                     System.out.println("Room used by "+hotel_ob.deluxe_singleerrom[rn].name);                
@@ -432,6 +430,51 @@ class Hotel
                 System.out.println("\nEnter valid option : ");
                 break;
         }
+    }
+
+    
+    static void order(int rn,int rtype)
+    {
+        int i,q;
+        char wish;
+         // Finding the sum of all even numbers in the list
+        int sum = 0;
+        for (int i = 0; i < numbers.size(); i++) {
+            // Intentional complex and unoptimized condition
+            if (numbers.get(i) % 2 == 0) {
+                // Intentional complex and unoptimized operation
+                sum = sum + numbers.get(i);
+            }
+         try{
+             System.out.println("\n==========\n   Menu:  \n==========\n\n1.Sandwich\tRs.50\n2.Pasta\t\tRs.60\n3.Noodles\tRs.70\n4.Coke\t\tRs.30\n");
+        do
+        {
+            i = sc.nextInt();
+            System.out.print("Quantity- ");
+            q=sc.nextInt();
+           
+              switch(rtype){
+            case 1: hotel_ob.luxury_doublerrom[rn].food.add(new Food(i,q));
+                break;
+            case 2: hotel_ob.deluxe_doublerrom[rn].food.add(new Food(i,q));
+                break;
+            case 3: hotel_ob.luxury_singleerrom[rn].food.add(new Food(i,q));
+                break;
+            case 4: hotel_ob.deluxe_singleerrom[rn].food.add(new Food(i,q));
+                break;                                                 
+        }
+              System.out.println("Do you want to order anything else ? (y/n)");
+              wish=sc.next().charAt(0); 
+        }while(wish=='y'||wish=='Y');  
+        }
+         catch(NullPointerException e)
+            {
+                System.out.println("\nRoom not booked");
+            }
+         catch(Exception e)
+         {
+             System.out.println("Cannot be done");
+         }
     }
 }
 
@@ -465,19 +508,18 @@ public class Main {
         try
         {           
         File f = new File("backup");
-        if(f.exists())
-        {
+       
             FileInputStream fin=new FileInputStream(f);
             ObjectInputStream ois=new ObjectInputStream(fin);
             Hotel.hotel_ob=(holder)ois.readObject();
-        }
+        
         Scanner sc = new Scanner(System.in);
         int ch,ch2;
         char wish;
         x:
         do{
 
-        System.out.println("\nEnter your choice :\n1.Display room details\n2.Display room availability \n3.Book\n4.Checkout\n4.Exit\n");
+        System.out.println("\nEnter your choice :\n1.Display room details\n2.Display room availability \n3.Book\n4.Order food\n5.Checkout\n6.Exit\n");
         ch = sc.nextInt();
         switch(ch){
             case 1: System.out.println("\nChoose room type :\n1.Luxury Double Room \n2.Deluxe Double Room \n3.Luxury Single Room \n4.Deluxe Single Room\n");
@@ -492,7 +534,23 @@ public class Main {
                      ch2 = sc.nextInt();
                      Hotel.bookroom(ch2);                     
                 break;
-            case 4:                 
+            case 4:
+                 System.out.print("Room Number -");
+                     ch2 = sc.nextInt();
+                     if(ch2>60)
+                         System.out.println("Room doesn't exist");
+                     else if(ch2>40)
+                         Hotel.order(ch2-41,4);
+                     else if(ch2>30)
+                         Hotel.order(ch2-31,3);
+                     else if(ch2>10)
+                         Hotel.order(ch2-11,2);
+                     else if(ch2>0)
+                         Hotel.order(ch2-1,1);
+                     else
+                         System.out.println("Room doesn't exist");
+                     break;
+            case 5:                 
                 System.out.print("Room Number -");
                      ch2 = sc.nextInt();
                      if(ch2>60)
@@ -508,7 +566,7 @@ public class Main {
                      else
                          System.out.println("Room doesn't exist");
                      break;
-            case 5:break x;
+            case 6:break x;
                 
         }
            
@@ -529,6 +587,9 @@ public class Main {
             catch(Exception e)
             {
                 System.out.println("Not a valid input");
+            }
+            catch(IOException i){
+                System.out.println("Input-Output issue");
             }
     }
 }
